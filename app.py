@@ -1,4 +1,4 @@
-from langchain.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import os
 
@@ -25,3 +25,18 @@ split_docs = text_splitter.split_documents(docs)
 
 print(f"loaded{len(split_docs)}chunks from {len(docs)}pdf documents.")
       
+
+# Step 3
+# Creating a vector database by converting the text chunks into embeddings
+
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import FAISS
+
+embeddings = OpenAIEmbeddings()
+vectorstore = FAISS.from_documents(split_docs, embeddings)
+
+print("vector store created")
+
+# Step 4 
+
+
