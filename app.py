@@ -2,6 +2,8 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import os
 
+os.environ["OPENAI_API_KEY"] = "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"
+
 # Folder containing all PDFs
 pdf_folder = "data"
 
@@ -29,8 +31,8 @@ print(f"loaded{len(split_docs)}chunks from {len(docs)}pdf documents.")
 # Step 3
 # Creating a vector database by converting the text chunks into embeddings
 
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import FAISS
+from langchain_openai.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores import FAISS
 
 embeddings = OpenAIEmbeddings()
 vectorstore = FAISS.from_documents(split_docs, embeddings)
@@ -38,5 +40,20 @@ vectorstore = FAISS.from_documents(split_docs, embeddings)
 print("vector store created")
 
 # Step 4 
+# Creating the LLM and RAG Chain
 
+from langchain.chains import RetrievalQA
+from langchain_openai import ChatOpenAI
+
+llm = ChatOpenAI(model="gpt-3.5-turbo", temperature = 0.3)
+qa_chain = RetrievalQA.from_chain_type(llm=llm, retriever=vectorstore.as_retriever(search_kwargs={"k": 3}))
+
+
+# Step 5
+# Ask Questions
+
+query = "What will the rounding practioner be responsible for?"
+response = qa_chain.invoke(query)
+print("Answer:")
+print(response)
 
