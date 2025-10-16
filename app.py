@@ -2,7 +2,6 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import os
 
-os.environ["OPENAI_API_KEY"] = "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"
 
 # Folder containing all PDFs
 pdf_folder = "data"
@@ -56,4 +55,3 @@ query = "What will the rounding practioner be responsible for?"
 response = qa_chain.invoke(query)
 print("Answer:")
 print(response)
-
